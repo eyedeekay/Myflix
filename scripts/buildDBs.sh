@@ -17,15 +17,20 @@ case "${1}" in #switch case for the program's argument
 		;;
 	"2")
 		find $TVpath -name "*.mp4"| sort | while read file; do #sorts filenames and iterates through them
-			./parseTVfilename.sh $file	#parses through $file, adds it to database
+            if ! grep -q ${file} $dbNameTV; then #check if file is already present in database
+				./parseTVfilename.sh $file	#parses through $file, adds it to database
+            fi
 		done
 		;;
 	"3")
-		find $MoviesPath -iname "*.mp4" -exec ./parseMfilename.sh {} \;
+		find $MoviesPath -iname "*.mp4" -exec ./parseMfilename.sh {} \; &
+		pid1=$!
 		find $TVpath -name "*.mp4"| sort | while read file; do #see above
-			./parseTVfilename.sh $file
+			if ! grep -q ${file} $dbNameTV; then
+				./parseTVfilename.sh $file
+			fi
 		done
-		;;
+		wait $pid1;;
 	*)
 		echo "Invalid input, use: #1 for only movies, #2 for only tv shows and #3 for both";;
 esac
