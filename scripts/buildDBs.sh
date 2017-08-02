@@ -28,6 +28,9 @@ case "${1}" in #switch case for the program's argument
 	"3")
 		find $MoviesPath -iname "*.mp4" -exec ./parseMfilename.sh {} \; &
 		pid1=$!
+		if [ ! -f $dbNameTV ]; then #creates the dbfile if missing
+                	touch $dbNameTV;
+		fi
 		find $TVpath -name "*.mp4"| sort | while read file; do #see above
 			if ! grep -q ${file} $dbNameTV; then
 				./parseTVfilename.sh $file
