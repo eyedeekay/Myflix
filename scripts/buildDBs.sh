@@ -17,9 +17,12 @@ case "${1}" in #switch case for the program's argument
 		;;
 	"2")
 		find $TVpath -name "*.mp4"| sort | while read file; do #sorts filenames and iterates through them
-            if ! grep -q ${file} $dbNameTV; then #check if file is already present in database
-				./parseTVfilename.sh $file	#parses through $file, adds it to database
-            fi
+                    if [ ! -f $dbNameTV ]; then #creates the dbfile if missing
+                        touch $dbNameTV;
+                    fi
+                    if ! grep -q ${file} $dbNameTV; then #check if file is already present in database
+                                        ./parseTVfilename.sh $file	#parses through $file, adds it to database
+                    fi
 		done
 		;;
 	"3")
