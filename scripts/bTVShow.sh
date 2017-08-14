@@ -10,13 +10,13 @@ i=${2}
 myAlt=$(echo ${i} | sed "s/'//g") #strips single quotes from the Show string
 myAlt=$(echo ${myAlt} | sed "s/\"//g") #strips double guotes from the Show string
 myImg=$(jq -r "map(select(.Show | contains(\"${i}\")) .Poster) | .[]" $dbNameTV)
-if [ $myImg = "null"  ]; then
+if [ "$myImg" = "null"  ]; then
         echo "Please note, \"""${i}""\" does NOT have a poster!";
         myImg=""
 fi
 htmlStr+="<div class=\"showDiv\">\n<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModal(this)\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
 htmlStr+="\n<div id=\"B${myID}\" class=\"modal\">\n<div class=\"modal-content\">"
-numSeasons=$(jq -r "map(select(.Show | contains(\"${i}\")) .Seasons) | .[]" $dbNameTV) 
+numSeasons=$(jq -r "map(select(.Show | contains(\"${i}\")) .Seasons) | .[]" $dbNameTV)
 myEpisodes=($(jq -r "map(select(.Show | contains(\"${i}\")) .Episodes[].File) | .[]" $dbNameTV)) #creates an array with all the filepaths for all the episodes
 numEpisodes=${#myEpisodes[@]} #gets array size
 htmlStr+="\n<span onclick=\"javascript:hideModal()\" class=\"close\">&times;</span>\n<select id=\"selector${myID}_\" onchange=\"javascript:changeSeason(this)\" class=\"showSelect\">"
@@ -46,7 +46,7 @@ while [[ $epNum -le $numEpisodes ]] && [[ $seasonNum -le $numSeasons ]]; do
                 myLang=($(jq -r "map(select(.Show | contains(\"${i}\")) .Episodes[${epNum}].Subs[${tempIndex}].lang) | .[]" $dbNameTV))
                 myLabel=($(jq -r "map(select(.Show | contains(\"${i}\")) .Episodes[${epNum}].Subs[${tempIndex}].label) | .[]" $dbNameTV))
                 subsStr+="\n<track src='' kind=\"subtitles\" srclang=\"${myLang}\" label=\"${myLabel}\">"
-                tempSub=${mySub[${tempIndex}]} #gets subtitle path 
+                tempSub=${mySub[${tempIndex}]} #gets subtitle path
                 tempSub=$(sed s/\'/"\\\'"/ <<< $tempSub) #escpaes single quotes, so ' becomes \' and doesn't mess up the html
                 tempHtmlStr+=${tempSub}"," #path to the sub, to be fed to JS function that loads it in if needed
                 ((tempIndex++))
@@ -63,7 +63,7 @@ while [[ $epNum -le $numEpisodes ]] && [[ $seasonNum -le $numSeasons ]]; do
         ((realEpNum++))
         ((epNum++))
     else #the episode file path did not contain the current season, so go to next season
-        ((seasonNum++)) 
+        ((seasonNum++))
         htmlStr+="\n</ul>\n<ul id=\"C${myID}_${seasonNum}\" class=\"showEpUl\">"
         realEpNum=1
     fi
