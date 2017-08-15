@@ -34,6 +34,7 @@ docker-clobber:
 
 docker-run:
 	docker run --rm \
+		-d \
 		-p 80:8080 \
 		--cap-drop=all \
 		-v MoImg:/home/myflix/myflix/MoImg \

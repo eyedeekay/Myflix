@@ -14,8 +14,8 @@ WORKDIR /home/flix/myflix/scripts
 RUN bash -c 'source config.cfg && \
         mkdir -p $TVpath $MoviesPath $dMoFolder $dTVFolder && \
         touch $TVpath/ex $MoviesPath/ex $dMoFolder/ex $dTVFolder/ex '
-RUN [ "./buildDBs.sh", "2" ]
-RUN [ "./buildHtml.sh", "2" ]
+RUN [ "./buildDBs.sh", "3" ]
+RUN [ "./buildHtml.sh", "3" ]
 VOLUME /home/flix/myflix/TV \
         /home/flix/myflix/Movies \
         /home/flix/myflix/TVimg \
