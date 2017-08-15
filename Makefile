@@ -43,7 +43,7 @@ docker-run:
 		-v TVimg:/home/myflix/myflix/TVimg \
 		 --name myflix -t myflix
 
-docker-exec:
+docker-index:
 	docker exec -t myflix bash -c './buildDBs.sh 3'
 	docker exec -t myflix bash -c './buildHtml.sh 3'
 

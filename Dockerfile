@@ -5,7 +5,7 @@ RUN apk update
 RUN apk add jq imagemagick ffmpeg bash darkhttpd curl wget youtube-dl ca-certificates moreutils@testing
 RUN adduser -h /home/flix -s bash -D flix
 COPY . /home/flix/myflix
-RUN rm /home/flix/myflix/scripts/tmdbapi.cfg
+RUN rm -f /home/flix/myflix/scripts/tmdbapi.cfg
 RUN chown -R flix:flix /home/flix
 RUN chown -R root:root /home/flix/myflix/scripts
 COPY scripts/tmdbapi.cfg /home/flix/.api_keys/
