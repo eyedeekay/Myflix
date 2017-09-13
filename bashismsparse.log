@@ -50,33 +50,15 @@ possible bashism in parseTVfilename.sh line 115 (bash arrays, ${name[0|*|@]}):
 					if [ "${#sub[@]}" -ge 1 ]; then
 possible bashism in parseTVfilename.sh line 119 (bash arrays, ${name[0|*|@]}):
 					for tempSub in "${sub[@]}"; do
-possible bashism in parseTVfilename.sh line 121 (should be VAR="${VAR}foo"):
-							subStr+=","
-possible bashism in parseTVfilename.sh line 126 (should be 'b = a'):
-							if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 131 (should be VAR="${VAR}foo"):
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 136 (should be 'b = a'):
-								if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 141 (should be VAR="${VAR}foo"):
 								subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 144 ('((' should be '$(('):
-						((counter++))
 possible bashism in parseTVfilename.sh line 183 (bash arrays, ${name[0|*|@]}):
-				if [ "${#sub[@]}" -ge 1 ]; then
+				if "${#sub[@]}" >= 1 ; then
 possible bashism in parseTVfilename.sh line 187 (bash arrays, ${name[0|*|@]}):
 				for tempSub in "${sub[@]}"; do
-possible bashism in parseTVfilename.sh line 189 (should be VAR="${VAR}foo"):
-						subStr+=","
-possible bashism in parseTVfilename.sh line 194 (should be 'b = a'):
-						if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 199 (should be VAR="${VAR}foo"):
 						subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 204 (should be 'b = a'):
-							if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 209 (should be VAR="${VAR}foo"):
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 212 ('((' should be '$(('):
-					((counter++))
-possible bashism in parseTVfilename.sh line 219 (echo -e):
-		echo -e '[\n{\n"Show": "'"${myShow}"'",\n"ID":"'"${myID}"'",\n "Poster":"'"${myPoster}"'", "Seasons":"'"${numSeasons}"'", "Episodes":[{"Season":"'"${mySeason}"'","Episode":"'"${myEpisode}"'","Title":"'"${myTitle}"'","File":"'"${file}"'",'"${subStr}"']}]}]\n' >> $dbNameTV;

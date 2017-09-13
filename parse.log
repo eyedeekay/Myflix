@@ -89,21 +89,6 @@ In parseTVfilename.sh line 36:
                                                                                                                        ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
 
 
-In parseTVfilename.sh line 37:
-					myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
-                                                                              ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 38:
-					myTitle=$(echo ${myTitle} | sed "s/'//g")
-                                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 39:
-					myTitle=$(echo ${myTitle} | sed "s/\"//g")
-                                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In parseTVfilename.sh line 50:
 					sub=($(find "$tempPath" -name "$subName"*".srt"))
                                             ^-- SC2169: In dash, arrays are not supported.
@@ -113,11 +98,6 @@ In parseTVfilename.sh line 50:
 In parseTVfilename.sh line 55:
 					for tempSub in "${sub[@]}"; do
                                                         ^-- SC2169: In dash, array references are not supported.
-
-
-In parseTVfilename.sh line 56:
-						if $counter >= 1 ]; then
-                                                                 ^-- SC2171: Found trailing ] outside test. Missing [?
 
 
 In parseTVfilename.sh line 67:
@@ -140,12 +120,6 @@ In parseTVfilename.sh line 89:
                         ^-- SC2178: Variable was used as an array but is now assigned a string.
 
 
-In parseTVfilename.sh line 93:
-				if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
-                                     ^-- SC1066: Don't use $ on the left side of assignments.
-                                          ^-- SC1068: Don't put spaces around the = in assignments.
-
-
 In parseTVfilename.sh line 95:
 						myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
                                                                                         ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
@@ -158,26 +132,9 @@ In parseTVfilename.sh line 96:
                                                                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
-In parseTVfilename.sh line 97:
-						myTitle=$(echo ${myTitle} | sed "s/'//g")
-                                                               ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 98:
-						myTitle=$(echo ${myTitle} | sed "s/\"//g")
-                                                               ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 112:
-					tempPath=$(dirname $1)
-                                                           ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In parseTVfilename.sh line 114:
-					sub=($(find $tempPath -name $subName"*.srt"))
+					sub=($(find "$tempPath" -name "$subName*.srt"))
                                             ^-- SC2169: In dash, arrays are not supported.
-                                                    ^-- SC2086: Double quote to prevent globbing and word splitting.
-                                                                    ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
 In parseTVfilename.sh line 119:
@@ -185,29 +142,9 @@ In parseTVfilename.sh line 119:
                                                         ^-- SC2169: In dash, array references are not supported.
 
 
-In parseTVfilename.sh line 121:
-							subStr+=","
-                                                        ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 126:
-							if [ $lang == $tempSubNoExt ]; then
-                                                                   ^-- SC2169: In dash, == in place of = is not supported.
-
-
 In parseTVfilename.sh line 131:
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
                                                         ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 134:
-								$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
-                                                                ^-- SC2091: Remove surrounding $() to avoid executing output.
-
-
-In parseTVfilename.sh line 136:
-								if [ $lang == $tempSubNoExt ]; then
-                                                                           ^-- SC2169: In dash, == in place of = is not supported.
 
 
 In parseTVfilename.sh line 141:
@@ -215,37 +152,9 @@ In parseTVfilename.sh line 141:
                                                                 ^-- SC2169: In dash, += is not supported.
 
 
-In parseTVfilename.sh line 144:
-						((counter++))
-                                                ^-- SC2169: In dash, standalone ((..)) is not supported.
-                                                         ^-- SC2169: In dash, ++ is not supported.
-
-
-In parseTVfilename.sh line 148:
-			tempPath=$(dirname $1);
-                                           ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 150:
-			numSeasons=$(find $tempPath -mindepth 1 -type d | wc -l);
-                                          ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 151:
-			jq -r ". |= . + [{\"Show\": \"${myShow}\",\"ID\":\"${myID}\",\"Poster\":\"${myPoster}\",\"Seasons\":\"${numSeasons}\",\"Episodes\":[{\"Season\":\"${mySeason}\",\"Episode\":\"${myEpisode}\",\"Title\":\"${myTitle}\",\"File\":\"${file}\",\"Subs\":[${subStr}]}]}]" $dbNameTV | sponge $dbNameTV;
-                                                                                                                                                                                                                                                                                             ^-- SC2086: Double quote to prevent globbing and word splitting.
-                                                                                                                                                                                                                                                                                                                ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In parseTVfilename.sh line 157:
 		sub=""
                 ^-- SC2178: Variable was used as an array but is now assigned a string.
-
-
-In parseTVfilename.sh line 161:
-			if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
-                             ^-- SC1066: Don't use $ on the left side of assignments.
-                                  ^-- SC1068: Don't put spaces around the = in assignments.
 
 
 In parseTVfilename.sh line 163:
@@ -255,31 +164,9 @@ In parseTVfilename.sh line 163:
                                                                                                                        ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
 
 
-In parseTVfilename.sh line 164:
-					myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
-                                                                              ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 165:
-					myTitle=$(echo ${myTitle} | sed "s/'//g")
-                                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 166:
-					myTitle=$(echo ${myTitle} | sed "s/\"//g")
-                                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 180:
-				tempPath=$(dirname $1)
-                                                   ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In parseTVfilename.sh line 182:
-				sub=($(find $tempPath -name $subName"*.srt"))
+				sub=($(find "$tempPath" -name "$subName*.srt"))
                                     ^-- SC2169: In dash, arrays are not supported.
-                                            ^-- SC2086: Double quote to prevent globbing and word splitting.
-                                                            ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
 In parseTVfilename.sh line 187:
@@ -287,59 +174,12 @@ In parseTVfilename.sh line 187:
                                                 ^-- SC2169: In dash, array references are not supported.
 
 
-In parseTVfilename.sh line 189:
-						subStr+=","
-                                                ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 194:
-						if [ $lang == $tempSubNoExt ]; then
-                                                           ^-- SC2169: In dash, == in place of = is not supported.
-
-
 In parseTVfilename.sh line 199:
 						subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
                                                 ^-- SC2169: In dash, += is not supported.
 
 
-In parseTVfilename.sh line 202:
-							$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
-                                                        ^-- SC2091: Remove surrounding $() to avoid executing output.
-
-
-In parseTVfilename.sh line 204:
-							if [ $lang == $tempSubNoExt ]; then
-                                                                   ^-- SC2169: In dash, == in place of = is not supported.
-
-
 In parseTVfilename.sh line 209:
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
                                                         ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 212:
-					((counter++))
-                                        ^-- SC2169: In dash, standalone ((..)) is not supported.
-                                                 ^-- SC2169: In dash, ++ is not supported.
-
-
-In parseTVfilename.sh line 216:
-		tempPath=$(dirname $1);
-                                   ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 218:
-		numSeasons=$(find $tempPath -mindepth 1 -type d | wc -l); #counts the number of seasons of episode by counting the first subfolders to the show folder
-                                  ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 219:
-		echo -e '[\n{\n"Show": "'"${myShow}"'",\n"ID":"'"${myID}"'",\n "Poster":"'"${myPoster}"'", "Seasons":"'"${numSeasons}"'", "Episodes":[{"Season":"'"${mySeason}"'","Episode":"'"${myEpisode}"'","Title":"'"${myTitle}"'","File":"'"${file}"'",'"${subStr}"']}]}]\n' >> $dbNameTV;
-                     ^-- SC2169: In dash, echo flags besides -n not supported.
-                                                                                                                                                                                                                                                                                      ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 223:
-	echo $filename
-             ^-- SC2086: Double quote to prevent globbing and word splitting.
 

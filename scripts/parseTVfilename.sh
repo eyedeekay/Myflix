@@ -34,9 +34,9 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 				if ! -z "$TMDBapi" && $getEpisodeName; then
 					myID=$(jq -r "map((select(.Show == \"${myShow}\") | .ID)) | .[]" "$dbNameTV")
 					myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
-					myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
-					myTitle=$(echo ${myTitle} | sed "s/'//g")
-					myTitle=$(echo ${myTitle} | sed "s/\"//g")
+					myTitle=$(curl -s --request GET --url "$myUrl" --data '{}' | jq -r '.name')
+					myTitle=$(echo "${myTitle}" | sed "s/'//g")
+					myTitle=$(echo "${myTitle}" | sed "s/\"//g")
 					if "${myTitle}" = "null"; then
 						myTitle=""
 					fi
@@ -53,7 +53,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 					fi
 					counter=0;
 					for tempSub in "${sub[@]}"; do
-						if $counter >= 1 ]; then
+						if "$counter" >= 1 ; then
 							subStr="$subStr,"
 						fi
 						tempSubNoExt="${tempSub%.*}"
@@ -90,12 +90,12 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 			subStr='{"subFile":"", "lang":"en","label":"English"}'
 			if $fetchTVmetadata; then
 				myID=$(./getTVid.sh "${myShow}");
-				if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
+				if  "$myID" =~ ^-?[0-9]+$ ; then #checks if ID is a number
 					if  ! -z "$TMDBapi"  && $getEpisodeName; then
 						myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
 						myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
-						myTitle=$(echo ${myTitle} | sed "s/'//g")
-						myTitle=$(echo ${myTitle} | sed "s/\"//g")
+						myTitle=$(echo "${myTitle}" | sed "s/'//g")
+						myTitle=$(echo "${myTitle}" | sed "s/\"//g")
 						if  "${myTitle}" == "null" ; then
 							myTitle=""
 						fi
@@ -109,31 +109,31 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 					show=${1%%.mp4} #removes .mp4
 					subName=${show#../} #removes ../
 					subName=$(basename "$subName")
-					tempPath=$(dirname $1)
-					tempPath=$tempPath"/"
-					sub=($(find $tempPath -name $subName"*.srt"))
+					tempPath=$(dirname "$1")
+					tempPath="$tempPath/"
+					sub=($(find "$tempPath" -name "$subName*.srt"))
 					if [ "${#sub[@]}" -ge 1 ]; then
 						subStr='';
 					fi
 					counter=0;
 					for tempSub in "${sub[@]}"; do
-						if  [ $counter -ge 1 ]; then
-							subStr+=","
+						if "$counter" >= 1; then
+							subStr="$subStr,"
 						fi
 						tempSubNoExt="${tempSub%.*}"
-						if  -f $tempSubNoExt".vtt" ; then
+						if  -f "$tempSubNoExt.vtt" ; then
 							lang="${tempSubNoExt##*_}"
-							if [ $lang == $tempSubNoExt ]; then
+							if "$lang" = "$tempSubNoExt"; then
 								lang="en";
 							fi
 							tempSub=$tempSubNoExt".vtt"
 							tempSub=${tempSub#../}
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 						else
-							if  -f $tempSub ; then
-								$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
+							if  -f "$tempSub" ; then
+								ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null
 								lang="${tempSubNoExt##*_}"
-								if [ $lang == $tempSubNoExt ]; then
+								if "$lang" = "$tempSubNoExt"; then
 									lang="en";
 								fi
 								tempSub=$tempSubNoExt".vtt"
@@ -141,14 +141,14 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 								subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 							fi
 						fi
-						((counter++))
+						$counter; _=$((counter=counter+1))
 					done
 				fi
 			fi
-			tempPath=$(dirname $1);
+			tempPath=$(dirname "$1");
 			tempPath=${tempPath%/*};
-			numSeasons=$(find $tempPath -mindepth 1 -type d | wc -l);
-			jq -r ". |= . + [{\"Show\": \"${myShow}\",\"ID\":\"${myID}\",\"Poster\":\"${myPoster}\",\"Seasons\":\"${numSeasons}\",\"Episodes\":[{\"Season\":\"${mySeason}\",\"Episode\":\"${myEpisode}\",\"Title\":\"${myTitle}\",\"File\":\"${file}\",\"Subs\":[${subStr}]}]}]" $dbNameTV | sponge $dbNameTV;
+			numSeasons=$(find "$tempPath" -mindepth 1 -type d | wc -l);
+			jq -r ". |= . + [{\"Show\": \"${myShow}\",\"ID\":\"${myID}\",\"Poster\":\"${myPoster}\",\"Seasons\":\"${numSeasons}\",\"Episodes\":[{\"Season\":\"${mySeason}\",\"Episode\":\"${myEpisode}\",\"Title\":\"${myTitle}\",\"File\":\"${file}\",\"Subs\":[${subStr}]}]}]" "$dbNameTV" | sponge "$dbNameTV";
 		fi
 	else
 		myPoster="";
@@ -158,12 +158,12 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 		subStr='"Subs":[{"subFile":"", "lang":"en","label":"English"}'
 		if $fetchTVmetadata; then
 			myID=$(./getTVid.sh "${myShow}");
-			if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
+			if  "$myID" =~ ^-?[0-9]+$ ; then #checks if ID is a number
 				if  ! -z "$TMDBapi"  && $getEpisodeName; then
 					myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
-					myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
-					myTitle=$(echo ${myTitle} | sed "s/'//g")
-					myTitle=$(echo ${myTitle} | sed "s/\"//g")
+					myTitle=$(curl -s --request GET --url "$myUrl" --data '{}' | jq -r '.name')
+					myTitle=$(echo "${myTitle}" | sed "s/'//g")
+					myTitle=$(echo "${myTitle}" | sed "s/\"//g")
 					if  "${myTitle}" == "null" ; then
 						myTitle=""
 					fi
@@ -177,46 +177,46 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 				show=${1%%.mp4} #removes .mp4
 				subName=${show#../} #removes ../
 				subName=$(basename "$subName")
-				tempPath=$(dirname $1)
-				tempPath=$tempPath"/"
-				sub=($(find $tempPath -name $subName"*.srt"))
-				if [ "${#sub[@]}" -ge 1 ]; then
+				tempPath=$(dirname "$1")
+				tempPath="$tempPath/"
+				sub=($(find "$tempPath" -name "$subName*.srt"))
+				if "${#sub[@]}" >= 1 ; then
 					subStr='"Subs":[';
 				fi
 				counter=0;
 				for tempSub in "${sub[@]}"; do
-					if  [ $counter -ge 1 ]; then
-						subStr+=","
+					if  "$counter" >= 1 ; then
+						subStr="$subStr,"
 					fi
 					tempSubNoExt="${tempSub%.*}"
-					if  -f $tempSubNoExt".vtt" ; then
+					if  -f "$tempSubNoExt.vtt" ; then
 						lang="${tempSubNoExt##*_}"
-						if [ $lang == $tempSubNoExt ]; then
+						if "$lang" = "$tempSubNoExt"; then
 							lang="en";
 						fi
-						tempSub=$tempSubNoExt".vtt"
+						tempSub="$tempSubNoExt.vtt"
 						tempSub=${tempSub#../}
 						subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 					else
-						if  -f $tempSub ; then
-							$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
+						if  -f "$tempSub" ; then
+							ffmpeg -i "$tempSub" "$tempSubNoExt.vtt" 2> /dev/null
 							lang="${tempSubNoExt##*_}"
-							if [ $lang == $tempSubNoExt ]; then
+							if "$lang" = "$tempSubNoExt"; then
 								lang="en";
 							fi
-							tempSub=$tempSubNoExt".vtt"
+							tempSub="$tempSubNoExt.vtt"
 							tempSub=${tempSub#../}
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 						fi
 					fi
-					((counter++))
+					$counter; _=$((counter=counter+1))
 				done
 			fi
 		fi
-		tempPath=$(dirname $1);
+		tempPath=$(dirname "$1");
 		tempPath=${tempPath%/*};
-		numSeasons=$(find $tempPath -mindepth 1 -type d | wc -l); #counts the number of seasons of episode by counting the first subfolders to the show folder
-		printf "%s" '[\n{\n"Show": "'"${myShow}"'",\n"ID":"'"${myID}"'",\n "Poster":"'"${myPoster}"'", "Seasons":"'"${numSeasons}"'", "Episodes":[{"Season":"'"${mySeason}"'","Episode":"'"${myEpisode}"'","Title":"'"${myTitle}"'","File":"'"${file}"'",'"${subStr}"']}]}]\n' >> $dbNameTV;
+		numSeasons=$(find "$tempPath" -mindepth 1 -type d | wc -l); #counts the number of seasons of episode by counting the first subfolders to the show folder
+		printf "%s" '[\n{\n"Show": "'"${myShow}"'",\n"ID":"'"${myID}"'",\n "Poster":"'"${myPoster}"'", "Seasons":"'"${numSeasons}"'", "Episodes":[{"Season":"'"${mySeason}"'","Episode":"'"${myEpisode}"'","Title":"'"${myTitle}"'","File":"'"${file}"'",'"${subStr}"']}]}]\n' >> "$dbNameTV";
 	fi
 else
 	echo -n "Unparsable "
