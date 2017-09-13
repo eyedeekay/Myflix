@@ -11,39 +11,39 @@ printf "<!DOCTYPE html>\n<html>\n<head>\n<title>Myflix</title>\n<meta charset=\"
 # B+myID identifies the movie's modal
 # C+myID identifies the movie's video player
 myID=1
-jq -r '.[].Movie' $dbNameMovie | while read i; do #sets i to to the value of "Movie", loops through every movie in the database
-	myImg=$(jq -r "map(select(.Movie | contains(\"${i}\")) .Poster) | .[]" $dbNameMovie)
+jq -r '.[].Movie' "$dbNameMovie" | while read -r i; do #sets i to to the value of "Movie", loops through every movie in the database
+	myImg=$(jq -r "map(select(.Movie | contains(\"${i}\")) .Poster) | .[]" "$dbNameMovie")
 	if [ "$myImg" = "null"  ]; then
                 echo "Please note, \"""${i}""\" does NOT have a poster!";
 		myImg=""
 	fi
-	myFile=$(jq -r "map(select(.Movie | contains(\"${i}\")) .File) | .[]" $dbNameMovie)
-	mySub=($(jq -r "map(select(.Movie | contains(\"${i}\")) .Subs[].subFile) | .[]" $dbNameMovie))
+	myFile=$(jq -r "map(select(.Movie | contains(\"${i}\")) .File) | .[]" "$dbNameMovie")
+	mySub=($(jq -r "map(select(.Movie | contains(\"${i}\")) .Subs[].subFile) | .[]" "$dbNameMovie"))
 	mySubNum=${#mySub[@]}
-	myAlt=$(echo ${i} | sed "s/'//")
+	myAlt=$(echo "${i}" | sed "s/'//")
 	htmlStr="<div class=\"movieDiv\">\n"
 	tempHtml=""
 	tempHtmlStr=""
-	if [ $mySubNum -ge 1 ]; then
+	if "$mySubNum" >= 1; then
 		tempIndex=0;
-		while [ $tempIndex -lt $mySubNum ]; do
+		while "$tempIndex" < "$mySubNum"; do
 			myLang=($(jq -r "map(select(.Movie | contains(\"${i}\")) .Subs[${tempIndex}].lang) | .[]" $dbNameMovie))
 			myLabel=($(jq -r "map(select(.Movie | contains(\"${i}\")) .Subs[${tempIndex}].lang) | .[]" $dbNameMovie))
-			tempHtml+="\n<track src='' kind=\"subtitles\" srclang=\"${myLang}\" label=\"${myLabel}\">"
+			tempHtml="$tempHtml\n<track src='' kind=\"subtitles\" srclang=\"${myLang}\" label=\"${myLabel}\">"
 			tempHtmlStr+=${mySub[${tempIndex}]}"," #path to the sub, to be fed to JS function that loads it in if needed
-			((tempIndex++))
+			$tempIndex; _=$((tempIndex=tempIndex+1))
 		done
-		htmlStr+="<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModalsetSubs(this, '"${tempHtmlStr}"')\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
+		htmlStr="$htmlStr\n<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModalsetSubs(this, '\"${tempHtmlStr}\"')\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
 	else
-		htmlStr+="<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModal(this)\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
+		htmlStr="$htmlStr\n<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModal(this)\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
 	fi
-	htmlStr+="\n<div id=\"B${myID}\" class=\"modal\">\n<div class=\"modal-content\">\n<video id=\"C${myID}\" class=\"video_player\" controls preload=\"none\">\n<source src=\"${myFile}\" type=\"video/mp4\">"
-	htmlStr+=$tempHtml;
-	htmlStr+="\n</video>\n<span onclick=\"javascript:hideModal()\" class=\"close\">&times;</span>\n"
-	htmlStr+="</div>\n</div>\n</div>"
-	echo -e $htmlStr >> $Mhtml
+	htmlStr="$htmlStr\n\n<div id=\"B${myID}\" class=\"modal\">\n<div class=\"modal-content\">\n<video id=\"C${myID}\" class=\"video_player\" controls preload=\"none\">\n<source src=\"${myFile}\" type=\"video/mp4\">"
+	htmlStr="$htmlStr\n$tempHtml";
+	htmlStr="$htmlStr\n\n</video>\n<span onclick=\"javascript:hideModal()\" class=\"close\">&times;</span>\n"
+	htmlStr="$htmlStr\n</div>\n</div>\n</div>"
+	printf "%s\n" "$htmlStr" >> $Mhtml
 	htmlStr=""
-	((myID++))
+	$myID; _=$((myID=myID+1))
 done
-echo -e '\n</div>\n</body>\n</html>' >> $Mhtml
+printf '\n</div>\n</body>\n</html>' >> $Mhtml
 chmod 755 $Mhtml

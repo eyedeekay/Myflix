@@ -60,6 +60,7 @@ check:
 	shellcheck -s "$(SHELL)" -x buildHtml.sh > ../buildhtml.log; \
 	shellcheck -s "$(SHELL)" -x bMhtml.sh >> ../buildhtml.log; \
 	shellcheck -s "$(SHELL)" -x bTVhtml.sh >> ../buildhtml.log; \
+	shellcheck -s "$(SHELL)" -x parse*.sh >> ../parse.log; \
 	checkbashisms -x -f buildDBs.sh 2> ../bashismsdb.log; \
 	checkbashisms -x -f bTVShow.sh 2>> ../bashismsdb.log; \
 	checkbashisms -x -f getMid.sh 2>> ../bashismsdb.log; \
@@ -69,4 +70,5 @@ check:
 	checkbashisms -x -f buildHtml.sh 2> ../bashismshtml.log; \
 	checkbashisms -x -f bMhtml.sh 2>> ../bashismshtml.log; \
 	checkbashisms -x -f bTVhtml.sh 2>> ../bashismshtml.log; \
+	checkbashisms -x -f parse*.sh 2>> ../bashismsparse.log; \
 	true

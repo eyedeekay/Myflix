@@ -18,20 +18,20 @@ myID=1
 pidArray=()
 tmpFileArray=()
 IFS=$'\n'
-for i in $(jq -r '.[].Show' $dbNameTV); do #sets i to to the value of "Show", loops through every show in the database
+for i in $(jq -r '.[].Show' "$dbNameTV"); do #sets i to to the value of "Show", loops through every show in the database
     tmpfile=$(mktemp)
-    ./bTVShow.sh $myID $i > $tmpfile &
+    ./bTVShow.sh "$myID" "$i" > "$tmpfile" &
     pidArray+=($!)
     tmpFileArray+=($tmpfile)
-    ((myID++)) #change of show
+    $myID; _=$((myID=myID+1)) #change of show
 done
 numThreads=${#pidArray[@]}
 tempIndex=0;
-while [ $tempIndex -lt $numThreads ]; do
+while "$tempIndex" < "$numThreads"; do
     wait ${pidArray[${tempIndex}]}
-    cat "${tmpFileArray[${tempIndex}]}" >> $TVhtml
+    cat "${tmpFileArray[${tempIndex}]}" >> "$TVhtml"
     rm "${tmpFileArray[${tempIndex}]}"
-    ((tempIndex++))
+    $tempIndex; _=$((tempIndex=tempIndex+1))
 done
-echo -e '\n</div>\n</body>\n</html>' >> $TVhtml
+printf '\n</div>\n</body>\n</html>' >> $TVhtml
 chmod 755 $TVhtml

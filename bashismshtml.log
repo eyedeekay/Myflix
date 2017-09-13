@@ -1,48 +1,20 @@
 possible bashism in bMhtml.sh line 22 (bash arrays, ${name[0|*|@]}):
 	mySubNum=${#mySub[@]}
-possible bashism in bMhtml.sh line 32 (should be VAR="${VAR}foo"):
-			tempHtml+="\n<track src='' kind=\"subtitles\" srclang=\"${myLang}\" label=\"${myLabel}\">"
 possible bashism in bMhtml.sh line 33 (bash arrays, ${name[0|*|@]}):
 			tempHtmlStr+=${mySub[${tempIndex}]}"," #path to the sub, to be fed to JS function that loads it in if needed
 possible bashism in bMhtml.sh line 33 (should be VAR="${VAR}foo"):
 			tempHtmlStr+=${mySub[${tempIndex}]}"," #path to the sub, to be fed to JS function that loads it in if needed
-possible bashism in bMhtml.sh line 34 ('((' should be '$(('):
-			((tempIndex++))
-possible bashism in bMhtml.sh line 36 (should be VAR="${VAR}foo"):
-		htmlStr+="<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModalsetSubs(this, '"${tempHtmlStr}"')\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
-possible bashism in bMhtml.sh line 38 (should be VAR="${VAR}foo"):
-		htmlStr+="<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModal(this)\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
-possible bashism in bMhtml.sh line 40 (should be VAR="${VAR}foo"):
-	htmlStr+="\n<div id=\"B${myID}\" class=\"modal\">\n<div class=\"modal-content\">\n<video id=\"C${myID}\" class=\"video_player\" controls preload=\"none\">\n<source src=\"${myFile}\" type=\"video/mp4\">"
-possible bashism in bMhtml.sh line 41 (should be VAR="${VAR}foo"):
-	htmlStr+=$tempHtml;
-possible bashism in bMhtml.sh line 42 (should be VAR="${VAR}foo"):
-	htmlStr+="\n</video>\n<span onclick=\"javascript:hideModal()\" class=\"close\">&times;</span>\n"
-possible bashism in bMhtml.sh line 43 (should be VAR="${VAR}foo"):
-	htmlStr+="</div>\n</div>\n</div>"
-possible bashism in bMhtml.sh line 44 (echo -e):
-	echo -e $htmlStr >> $Mhtml
-possible bashism in bMhtml.sh line 46 ('((' should be '$(('):
-	((myID++))
-possible bashism in bMhtml.sh line 48 (echo -e):
-echo -e '\n</div>\n</body>\n</html>' >> $Mhtml
 possible bashism in bTVhtml.sh line 20 ($'...' should be "$(printf '...')"):
 IFS=$'\n'
 possible bashism in bTVhtml.sh line 24 (should be VAR="${VAR}foo"):
     pidArray+=($!)
 possible bashism in bTVhtml.sh line 25 (should be VAR="${VAR}foo"):
     tmpFileArray+=($tmpfile)
-possible bashism in bTVhtml.sh line 26 ('((' should be '$(('):
-    ((myID++)) #change of show
 possible bashism in bTVhtml.sh line 28 (bash arrays, ${name[0|*|@]}):
 numThreads=${#pidArray[@]}
 possible bashism in bTVhtml.sh line 31 (bash arrays, ${name[0|*|@]}):
     wait ${pidArray[${tempIndex}]}
 possible bashism in bTVhtml.sh line 32 (bash arrays, ${name[0|*|@]}):
-    cat "${tmpFileArray[${tempIndex}]}" >> $TVhtml
+    cat "${tmpFileArray[${tempIndex}]}" >> "$TVhtml"
 possible bashism in bTVhtml.sh line 33 (bash arrays, ${name[0|*|@]}):
     rm "${tmpFileArray[${tempIndex}]}"
-possible bashism in bTVhtml.sh line 34 ('((' should be '$(('):
-    ((tempIndex++))
-possible bashism in bTVhtml.sh line 36 (echo -e):
-echo -e '\n</div>\n</body>\n</html>' >> $TVhtml

@@ -1,39 +1,7 @@
 
-In bMhtml.sh line 14:
-jq -r '.[].Movie' $dbNameMovie | while read i; do #sets i to to the value of "Movie", loops through every movie in the database
-                  ^-- SC2086: Double quote to prevent globbing and word splitting.
-                                       ^-- SC2162: read without -r will mangle backslashes.
-
-
-In bMhtml.sh line 15:
-	myImg=$(jq -r "map(select(.Movie | contains(\"${i}\")) .Poster) | .[]" $dbNameMovie)
-                                                                               ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In bMhtml.sh line 20:
-	myFile=$(jq -r "map(select(.Movie | contains(\"${i}\")) .File) | .[]" $dbNameMovie)
-                                                                              ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In bMhtml.sh line 21:
-	mySub=($(jq -r "map(select(.Movie | contains(\"${i}\")) .Subs[].subFile) | .[]" $dbNameMovie))
+	mySub=($(jq -r "map(select(.Movie | contains(\"${i}\")) .Subs[].subFile) | .[]" "$dbNameMovie"))
               ^-- SC2169: In dash, arrays are not supported.
-                                                                                        ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In bMhtml.sh line 23:
-	myAlt=$(echo ${i} | sed "s/'//")
-                     ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In bMhtml.sh line 27:
-	if [ $mySubNum -ge 1 ]; then
-             ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In bMhtml.sh line 29:
-		while [ $tempIndex -lt $mySubNum ]; do
-                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
 In bMhtml.sh line 30:
@@ -49,69 +17,15 @@ In bMhtml.sh line 31:
 
 
 In bMhtml.sh line 32:
-			tempHtml+="\n<track src='' kind=\"subtitles\" srclang=\"${myLang}\" label=\"${myLabel}\">"
-                        ^-- SC2169: In dash, += is not supported.
-                                                                                ^-- SC2128: Expanding an array without an index only gives the first element.
-                                                                                                    ^-- SC2128: Expanding an array without an index only gives the first element.
+			tempHtml="$tempHtml\n<track src='' kind=\"subtitles\" srclang=\"${myLang}\" label=\"${myLabel}\">"
+                                                                                        ^-- SC2128: Expanding an array without an index only gives the first element.
+                                                                                                            ^-- SC2128: Expanding an array without an index only gives the first element.
 
 
 In bMhtml.sh line 33:
 			tempHtmlStr+=${mySub[${tempIndex}]}"," #path to the sub, to be fed to JS function that loads it in if needed
                         ^-- SC2169: In dash, += is not supported.
                                      ^-- SC2169: In dash, array references are not supported.
-
-
-In bMhtml.sh line 34:
-			((tempIndex++))
-                        ^-- SC2169: In dash, standalone ((..)) is not supported.
-                                   ^-- SC2169: In dash, ++ is not supported.
-
-
-In bMhtml.sh line 36:
-		htmlStr+="<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModalsetSubs(this, '"${tempHtmlStr}"')\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
-                ^-- SC2169: In dash, += is not supported.
-                                                                                                               ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
-
-
-In bMhtml.sh line 38:
-		htmlStr+="<input id=\"A${myID}\" class=\"myBtn\" onclick=\"javascript:showModal(this)\" type=\"image\" src=\"${myImg}\" onload=\"javascript:setAlt(this, '${myAlt}')\">"
-                ^-- SC2169: In dash, += is not supported.
-
-
-In bMhtml.sh line 40:
-	htmlStr+="\n<div id=\"B${myID}\" class=\"modal\">\n<div class=\"modal-content\">\n<video id=\"C${myID}\" class=\"video_player\" controls preload=\"none\">\n<source src=\"${myFile}\" type=\"video/mp4\">"
-        ^-- SC2169: In dash, += is not supported.
-
-
-In bMhtml.sh line 41:
-	htmlStr+=$tempHtml;
-        ^-- SC2169: In dash, += is not supported.
-
-
-In bMhtml.sh line 42:
-	htmlStr+="\n</video>\n<span onclick=\"javascript:hideModal()\" class=\"close\">&times;</span>\n"
-        ^-- SC2169: In dash, += is not supported.
-
-
-In bMhtml.sh line 43:
-	htmlStr+="</div>\n</div>\n</div>"
-        ^-- SC2169: In dash, += is not supported.
-
-
-In bMhtml.sh line 44:
-	echo -e $htmlStr >> $Mhtml
-             ^-- SC2169: In dash, echo flags besides -n not supported.
-
-
-In bMhtml.sh line 46:
-	((myID++))
-        ^-- SC2169: In dash, standalone ((..)) is not supported.
-              ^-- SC2169: In dash, ++ is not supported.
-
-
-In bMhtml.sh line 48:
-echo -e '\n</div>\n</body>\n</html>' >> $Mhtml
-     ^-- SC2169: In dash, echo flags besides -n not supported.
 
 
 In bTVhtml.sh line 18:
@@ -129,17 +43,6 @@ IFS=$'\n'
     ^-- SC2169: In dash, $'..' is not supported.
 
 
-In bTVhtml.sh line 21:
-for i in $(jq -r '.[].Show' $dbNameTV); do #sets i to to the value of "Show", loops through every show in the database
-                            ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In bTVhtml.sh line 23:
-    ./bTVShow.sh $myID $i > $tmpfile &
-                       ^-- SC2086: Double quote to prevent globbing and word splitting.
-                            ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In bTVhtml.sh line 24:
     pidArray+=($!)
     ^-- SC2169: In dash, += is not supported.
@@ -152,17 +55,6 @@ In bTVhtml.sh line 25:
                   ^-- SC2169: In dash, arrays are not supported.
 
 
-In bTVhtml.sh line 26:
-    ((myID++)) #change of show
-    ^-- SC2169: In dash, standalone ((..)) is not supported.
-          ^-- SC2169: In dash, ++ is not supported.
-
-
-In bTVhtml.sh line 30:
-while [ $tempIndex -lt $numThreads ]; do
-                       ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In bTVhtml.sh line 31:
     wait ${pidArray[${tempIndex}]}
          ^-- SC2169: In dash, array references are not supported.
@@ -170,22 +62,11 @@ In bTVhtml.sh line 31:
 
 
 In bTVhtml.sh line 32:
-    cat "${tmpFileArray[${tempIndex}]}" >> $TVhtml
+    cat "${tmpFileArray[${tempIndex}]}" >> "$TVhtml"
          ^-- SC2169: In dash, array references are not supported.
 
 
 In bTVhtml.sh line 33:
     rm "${tmpFileArray[${tempIndex}]}"
         ^-- SC2169: In dash, array references are not supported.
-
-
-In bTVhtml.sh line 34:
-    ((tempIndex++))
-    ^-- SC2169: In dash, standalone ((..)) is not supported.
-               ^-- SC2169: In dash, ++ is not supported.
-
-
-In bTVhtml.sh line 36:
-echo -e '\n</div>\n</body>\n</html>' >> $TVhtml
-     ^-- SC2169: In dash, echo flags besides -n not supported.
 
