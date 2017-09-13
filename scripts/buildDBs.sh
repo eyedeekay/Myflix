@@ -5,7 +5,7 @@ if [ "$#" -ne 1 ]; then
 	exit 1
 fi
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 TVpath=../TV/;
 MoviesPath=../Movies/;
 . config.cfg
@@ -13,27 +13,27 @@ MoviesPath=../Movies/;
 case "${1}" in #switch case for the program's argument
 	"1")
 		#find all files that end in mp4 and executes parseMfilename.sh for every one of them, sequentially
-		find $MoviesPath -iname "*.mp4" -exec ./parseMfilename.sh {} \; 
+		find "$MoviesPath" -iname "*.mp4" -exec ./parseMfilename.sh {} \;
 		;;
 	"2")
-		find $TVpath -name "*.mp4"| sort | while read file; do #sorts filenames and iterates through them
-                    if [ ! -f $dbNameTV ]; then #creates the dbfile if missing
-                        touch $dbNameTV;
+		find "$TVpath" -name "*.mp4"| sort | while read -r file; do #sorts filenames and iterates through them
+                    if [ ! -f "$dbNameTV" ]; then #creates the dbfile if missing
+                        touch "$dbNameTV";
                     fi
-                    if ! grep -q ${file} $dbNameTV; then #check if file is already present in database
-                                        ./parseTVfilename.sh $file	#parses through $file, adds it to database
+                    if ! grep -q "${file}" "$dbNameTV"; then #check if file is already present in database
+                                        ./parseTVfilename.sh "$file"	#parses through $file, adds it to database
                     fi
 		done
 		;;
 	"3")
-		find $MoviesPath -iname "*.mp4" -exec ./parseMfilename.sh {} \; &
+		find "$MoviesPath" -iname "*.mp4" -exec ./parseMfilename.sh {} \; &
 		pid1=$!
-		if [ ! -f $dbNameTV ]; then #creates the dbfile if missing
-                	touch $dbNameTV;
+		if [ ! -f "$dbNameTV" ]; then #creates the dbfile if missing
+                	touch "$dbNameTV";
 		fi
-		find $TVpath -name "*.mp4"| sort | while read file; do #see above
-			if ! grep -q ${file} $dbNameTV; then
-				./parseTVfilename.sh $file
+		find "$TVpath" -name "*.mp4"| sort | while read -r file; do #see above
+			if ! grep -q "${file}" "$dbNameTV"; then
+				./parseTVfilename.sh "$file"
 			fi
 		done
 		wait $pid1;;

@@ -5,7 +5,7 @@ if [ "$#" -ne 1 ]; then
 	exit 1
 fi
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 TVpath=../TV/;
 MoviesPath=../Movies/;
 . config.cfg

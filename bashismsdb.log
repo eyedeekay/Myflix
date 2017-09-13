@@ -1,0 +1,26 @@
+possible bashism in bTVShow.sh line 21 (bash arrays, ${name[0|*|@]}):
+numEpisodes=${#myEpisodes[@]} #gets array size
+possible bashism in bTVShow.sh line 40 (bash arrays, ${name[0|*|@]}):
+        mySubNum=${#mySub[@]} #gets array size
+possible bashism in bTVShow.sh line 49 (bash arrays, ${name[0|*|@]}):
+                tempSub=${mySub[${tempIndex}]} #gets subtitle path
+possible bashism in getMid.sh line 11 (${parm/?/pat[/str]}):
+movie=${movie//./+}
+possible bashism in getTVid.sh line 14 (${parm/?/pat[/str]}):
+	show=${show// /%20} #spaces to html spaces
+possible bashism in getMposter.sh line 18 (alternative test command ([[ foo ]] should be [ foo ])):
+if [[ ! -z "$TMDBapi" ]]; then
+possible bashism in getMposter.sh line 21 (alternative test command ([[ foo ]] should be [ foo ])):
+	if [[ $output == *".jpg"* ]]; then
+possible bashism in getMposter.sh line 21 (should be 'b = a'):
+	if [[ $output == *".jpg"* ]]; then
+possible bashism in getMposter.sh line 40 (alternative test command ([[ foo ]] should be [ foo ])):
+		if [[ ! -z "$tinyPNGapi" ]]; then
+possible bashism in getTVposter.sh line 18 (alternative test command ([[ foo ]] should be [ foo ])):
+if [[ ! -z $TMDBapi ]]; then
+possible bashism in getTVposter.sh line 22 (alternative test command ([[ foo ]] should be [ foo ])):
+	if [[ $output == *".jpg"* ]]; then
+possible bashism in getTVposter.sh line 22 (should be 'b = a'):
+	if [[ $output == *".jpg"* ]]; then
+possible bashism in getTVposter.sh line 42 (alternative test command ([[ foo ]] should be [ foo ])):
+		if [[ ! -z "$tinyPNGapi" ]]; then

@@ -48,3 +48,8 @@ Temporary Items
 
 #api config files
 scripts/tmdbapi.cfg
+
+MoImg/
+Movies/
+TV/
+TVimg/

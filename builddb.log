@@ -1,0 +1,213 @@
+
+In bTVShow.sh line 20:
+myEpisodes=($(jq -r "map(select(.Show | contains(\"${i}\")) .Episodes[].File) | .[]" "$dbNameTV")) #creates an array with all the filepaths for all the episodes
+           ^-- SC2169: In dash, arrays are not supported.
+
+
+In bTVShow.sh line 34:
+    if [ "$episode" = *"Season.$seasonNum"* ] || [ "$episode" = *"S0$seasonNum"* ] || [ "$episode" = *"S$seasonNum"* ] ; then #if the episode file path contains the current season
+                      ^-- SC2081: [ .. ] can't match globs. Use [[ .. ]] or case statement.
+                                                                ^-- SC2081: [ .. ] can't match globs. Use [[ .. ]] or case statement.
+                                                                                                     ^-- SC2081: [ .. ] can't match globs. Use [[ .. ]] or case statement.
+
+
+In bTVShow.sh line 39:
+        mySub=($(jq -r "map(select(.Show | contains(\"${i}\")) .Episodes[${epNum}].Subs[].subFile) | .[]" "$dbNameTV")) #creates array with path to all subtitles
+              ^-- SC2169: In dash, arrays are not supported.
+
+
+In bTVShow.sh line 46:
+                myLang=($(jq -r "map(select(.Show | contains(\"${i}\")) .Episodes[${epNum}].Subs[${tempIndex}].lang) | .[]" "$dbNameTV"))
+                       ^-- SC2169: In dash, arrays are not supported.
+
+
+In bTVShow.sh line 47:
+                myLabel=($(jq -r "map(select(.Show | contains(\"${i}\")) .Episodes[${epNum}].Subs[${tempIndex}].label) | .[]" "$dbNameTV"))
+                        ^-- SC2169: In dash, arrays are not supported.
+
+
+In bTVShow.sh line 48:
+                subStr="$subStr\n<track src='' kind=\"subtitles\" srclang=\"${myLang}\" label=\"${myLabel}\">"
+                                                                            ^-- SC2128: Expanding an array without an index only gives the first element.
+                                                                                                ^-- SC2128: Expanding an array without an index only gives the first element.
+
+
+In bTVShow.sh line 49:
+                tempSub=${mySub[${tempIndex}]} #gets subtitle path
+                        ^-- SC2169: In dash, array references are not supported.
+
+
+In getMid.sh line 11:
+movie=${movie//./+}
+      ^-- SC2169: In dash, string replacement is not supported.
+
+
+In getTVid.sh line 14:
+	show=${show// /%20} #spaces to html spaces
+             ^-- SC2169: In dash, string replacement is not supported.
+
+
+In getMposter.sh line 18:
+if [[ ! -z "$TMDBapi" ]]; then
+   ^-- SC2169: In dash, [[ ]] is not supported.
+
+
+In getMposter.sh line 19:
+	myUrl="https://api.themoviedb.org/3/movie/tt"${id}"/images?include_image_language=en&api_key="$TMDBapi
+                                                     ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
+
+
+In getMposter.sh line 20:
+	output=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.posters | map(select((.width | contains(1000)) and (.height | contains(1500))) | .file_path) | .[]' | head -n1)
+                                             ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 21:
+	if [[ $output == *".jpg"* ]]; then
+           ^-- SC2169: In dash, [[ ]] is not supported.
+
+
+In getMposter.sh line 24:
+		myUrl="https://api.themoviedb.org/3/movie/tt"${id}"/images?api_key="$TMDBapi
+                                                             ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
+
+
+In getMposter.sh line 25:
+		output=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.posters[0] | .file_path')
+                                                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 32:
+		wget -q -N -P $dMoFolder $output;
+                                         ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 33:
+		output=$(basename $output)
+                                  ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 35:
+			convert $imgResizeMo $dMoFolder$output $dMoFolder$output
+                                ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                                         ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 38:
+			convert -strip -interlace Plane -gaussian-blur 0.05 -quality 90% $dMoFolder$output $dMoFolder$output
+                                                                                                   ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                                                                                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 40:
+		if [[ ! -z "$tinyPNGapi" ]]; then
+                   ^-- SC2169: In dash, [[ ]] is not supported.
+
+
+In getMposter.sh line 41:
+			imgUrl=$(curl -s --user api:$tinyPNGapi  --data-binary @$dMoFolder$output https://api.tinify.com/shrink | jq -r '.output.url')
+                                                                                          ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 42:
+			curl -s --user api:$tinyPNGapi --output $dMoFolder$output $imgUrl
+                                                                          ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                                                  ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 46:
+		echo $tempFolder"/"$output;
+                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                   ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getMposter.sh line 48:
+		echo $output
+                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 3:
+cd "$(dirname "$0")"
+^-- SC2164: Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+
+In getTVposter.sh line 18:
+if [[ ! -z $TMDBapi ]]; then
+   ^-- SC2169: In dash, [[ ]] is not supported.
+
+
+In getTVposter.sh line 19:
+	myUrl="https://api.themoviedb.org/3/tv/"${myID}"/images?language=en&api_key="${TMDBapi}
+                                                ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
+
+
+In getTVposter.sh line 20:
+	output=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.posters | map(select((.width | contains(680)) and (.height | contains(1000))) | .file_path) | .[]' | head -n1)
+                                             ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 22:
+	if [[ $output == *".jpg"* ]]; then
+           ^-- SC2169: In dash, [[ ]] is not supported.
+
+
+In getTVposter.sh line 25:
+		myUrl="https://api.themoviedb.org/3/tv/"${myID}"/images?api_key="${TMDBapi}
+                                                        ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
+
+
+In getTVposter.sh line 26:
+		output=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.posters[0] | .file_path')
+                                                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 34:
+		wget -q -N -P $dTVFolder $output; #downloads image
+                                         ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 35:
+		output=$(basename $output)
+                                  ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 37:
+			convert $imgResizeTV $dTVFolder$output $dTVFolder$output
+                                ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                       ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                                         ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 40:
+			convert -strip -interlace Plane -gaussian-blur 0.05 -quality 85% $dTVFolder$output $dTVFolder$output
+                                                                                                   ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                                                                                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 42:
+		if [[ ! -z "$tinyPNGapi" ]]; then
+                   ^-- SC2169: In dash, [[ ]] is not supported.
+
+
+In getTVposter.sh line 43:
+			imgUrl=$(curl -s --user api:$tinyPNGapi  --data-binary @$dTVFolder$output https://api.tinify.com/shrink | jq -r '.output.url')
+                                                                                          ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 44:
+			curl -s --user api:$tinyPNGapi --output $dTVFolder$output $imgUrl
+                                                                          ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                                                  ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 48:
+		echo $tempFolder"/"$output;
+                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                   ^-- SC2086: Double quote to prevent globbing and word splitting.
+
+
+In getTVposter.sh line 50:
+		echo $output
+                     ^-- SC2086: Double quote to prevent globbing and word splitting.
+

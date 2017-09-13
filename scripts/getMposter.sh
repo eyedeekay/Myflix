@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 if [ "$#" -eq 0 ]; then
 	echo "$0": usage: getMposter.sh ID
 	exit 1
@@ -47,6 +47,6 @@ if [[ ! -z "$TMDBapi" ]]; then
 	else
 		echo $output
 	fi
-else    
+else
 	echo "null"
 fi
