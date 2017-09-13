@@ -216,9 +216,9 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 		tempPath=$(dirname $1);
 		tempPath=${tempPath%/*};
 		numSeasons=$(find $tempPath -mindepth 1 -type d | wc -l); #counts the number of seasons of episode by counting the first subfolders to the show folder
-		echo -e '[\n{\n"Show": "'"${myShow}"'",\n"ID":"'"${myID}"'",\n "Poster":"'"${myPoster}"'", "Seasons":"'"${numSeasons}"'", "Episodes":[{"Season":"'"${mySeason}"'","Episode":"'"${myEpisode}"'","Title":"'"${myTitle}"'","File":"'"${file}"'",'"${subStr}"']}]}]\n' >> $dbNameTV;
+		printf "%s" '[\n{\n"Show": "'"${myShow}"'",\n"ID":"'"${myID}"'",\n "Poster":"'"${myPoster}"'", "Seasons":"'"${numSeasons}"'", "Episodes":[{"Season":"'"${mySeason}"'","Episode":"'"${myEpisode}"'","Title":"'"${myTitle}"'","File":"'"${file}"'",'"${subStr}"']}]}]\n' >> $dbNameTV;
 	fi
 else
 	echo -n "Unparsable "
-	echo $filename
+	echo "$filename"
 fi
