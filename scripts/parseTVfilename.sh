@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 if [ "$#" -ne 1 ]; then
 	echo "$0": usage: parseTVfilename.sh /path/to/file
 	exit 1
@@ -49,7 +49,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 					tempPath=$tempPath"/"
 					sub=($(find $tempPath -name $subName"*.srt"))
 					if [ "${#sub[@]}" -ge 1 ]; then
-						subStr=''; 
+						subStr='';
 					fi
 					counter=0;
 					for tempSub in "${sub[@]}"; do
@@ -113,7 +113,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 					tempPath=$tempPath"/"
 					sub=($(find $tempPath -name $subName"*.srt"))
 					if [ "${#sub[@]}" -ge 1 ]; then
-						subStr=''; 
+						subStr='';
 					fi
 					counter=0;
 					for tempSub in "${sub[@]}"; do
@@ -181,7 +181,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 				tempPath=$tempPath"/"
 				sub=($(find $tempPath -name $subName"*.srt"))
 				if [ "${#sub[@]}" -ge 1 ]; then
-					subStr='"Subs":['; 
+					subStr='"Subs":[';
 				fi
 				counter=0;
 				for tempSub in "${sub[@]}"; do
