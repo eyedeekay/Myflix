@@ -25,19 +25,19 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 	myShow=${myShow//./ }
 	mySeason=${BASH_REMATCH[2]};
 	myEpisode=${BASH_REMATCH[3]};
-	if [ -s $dbNameTV ]; then
+	if -s "$dbNameTV"; then
 		if grep -q "\"Show\": \"${myShow}\"" $dbNameTV; then
 			myTitle=""
 			sub=""
 			subStr='{"subFile":"", "lang":"en","label":"English"}'
 			if $fetchTVmetadata; then
-				if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
+				if ! -z "$TMDBapi" && $getEpisodeName; then
 					myID=$(jq -r "map((select(.Show == \"${myShow}\") | .ID)) | .[]" $dbNameTV)
 					myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
 					myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
 					myTitle=$(echo ${myTitle} | sed "s/'//g")
 					myTitle=$(echo ${myTitle} | sed "s/\"//g")
-					if [[ "${myTitle}" == "null" ]]; then
+					if "${myTitle}" = "null"; then
 						myTitle=""
 					fi
 				fi
@@ -45,9 +45,9 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 					show=${1%%.mp4} #removes .mp4
 					subName=${show#../} #removes ../
 					subName=$(basename "$subName")
-					tempPath=$(dirname $1)
+					tempPath=$(dirname "$1")
 					tempPath=$tempPath"/"
-					sub=($(find $tempPath -name $subName"*.srt"))
+					sub=($(find "$tempPath" -name "$subName"*".srt"))
 					if [ "${#sub[@]}" -ge 1 ]; then
 						subStr='';
 					fi
