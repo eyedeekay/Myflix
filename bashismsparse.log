@@ -38,82 +38,40 @@ possible bashism in parseTVfilename.sh line 27 ($BASH_SOMETHING):
 	myEpisode=${BASH_REMATCH[3]};
 possible bashism in parseTVfilename.sh line 27 (bash arrays, ${name[0|*|@]}):
 	myEpisode=${BASH_REMATCH[3]};
-possible bashism in parseTVfilename.sh line 34 (alternative test command ([[ foo ]] should be [ foo ])):
-				if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
-possible bashism in parseTVfilename.sh line 40 (alternative test command ([[ foo ]] should be [ foo ])):
-					if [[ "${myTitle}" == "null" ]]; then
-possible bashism in parseTVfilename.sh line 40 (should be 'b = a'):
-					if [[ "${myTitle}" == "null" ]]; then
 possible bashism in parseTVfilename.sh line 51 (bash arrays, ${name[0|*|@]}):
 					if [ "${#sub[@]}" -ge 1 ]; then
 possible bashism in parseTVfilename.sh line 55 (bash arrays, ${name[0|*|@]}):
 					for tempSub in "${sub[@]}"; do
-possible bashism in parseTVfilename.sh line 57 (should be VAR="${VAR}foo"):
-							subStr+=","
-possible bashism in parseTVfilename.sh line 60 (alternative test command ([[ foo ]] should be [ foo ])):
-						if [[ -f $tempSubNoExt".vtt" ]]; then
-possible bashism in parseTVfilename.sh line 62 (should be 'b = a'):
-							if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 67 (should be VAR="${VAR}foo"):
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 69 (alternative test command ([[ foo ]] should be [ foo ])):
-							if [[ -f $tempSub ]]; then
-possible bashism in parseTVfilename.sh line 72 (should be 'b = a'):
-								if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 77 (should be VAR="${VAR}foo"):
 								subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 80 ('((' should be '$(('):
-						((counter++))
-possible bashism in parseTVfilename.sh line 93 (alternative test command ([[ foo ]] should be [ foo ])):
-				if [[ $myID =~ ^-?[0-9]+$ ]]; then #checks if ID is a number
-possible bashism in parseTVfilename.sh line 94 (alternative test command ([[ foo ]] should be [ foo ])):
-					if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
-possible bashism in parseTVfilename.sh line 99 (alternative test command ([[ foo ]] should be [ foo ])):
-						if [[ "${myTitle}" == "null" ]]; then
-possible bashism in parseTVfilename.sh line 99 (should be 'b = a'):
-						if [[ "${myTitle}" == "null" ]]; then
 possible bashism in parseTVfilename.sh line 115 (bash arrays, ${name[0|*|@]}):
 					if [ "${#sub[@]}" -ge 1 ]; then
 possible bashism in parseTVfilename.sh line 119 (bash arrays, ${name[0|*|@]}):
 					for tempSub in "${sub[@]}"; do
 possible bashism in parseTVfilename.sh line 121 (should be VAR="${VAR}foo"):
 							subStr+=","
-possible bashism in parseTVfilename.sh line 124 (alternative test command ([[ foo ]] should be [ foo ])):
-						if [[ -f $tempSubNoExt".vtt" ]]; then
 possible bashism in parseTVfilename.sh line 126 (should be 'b = a'):
 							if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 131 (should be VAR="${VAR}foo"):
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 133 (alternative test command ([[ foo ]] should be [ foo ])):
-							if [[ -f $tempSub ]]; then
 possible bashism in parseTVfilename.sh line 136 (should be 'b = a'):
 								if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 141 (should be VAR="${VAR}foo"):
 								subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 possible bashism in parseTVfilename.sh line 144 ('((' should be '$(('):
 						((counter++))
-possible bashism in parseTVfilename.sh line 161 (alternative test command ([[ foo ]] should be [ foo ])):
-			if [[ $myID =~ ^-?[0-9]+$ ]]; then #checks if ID is a number
-possible bashism in parseTVfilename.sh line 162 (alternative test command ([[ foo ]] should be [ foo ])):
-				if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
-possible bashism in parseTVfilename.sh line 167 (alternative test command ([[ foo ]] should be [ foo ])):
-					if [[ "${myTitle}" == "null" ]]; then
-possible bashism in parseTVfilename.sh line 167 (should be 'b = a'):
-					if [[ "${myTitle}" == "null" ]]; then
 possible bashism in parseTVfilename.sh line 183 (bash arrays, ${name[0|*|@]}):
 				if [ "${#sub[@]}" -ge 1 ]; then
 possible bashism in parseTVfilename.sh line 187 (bash arrays, ${name[0|*|@]}):
 				for tempSub in "${sub[@]}"; do
 possible bashism in parseTVfilename.sh line 189 (should be VAR="${VAR}foo"):
 						subStr+=","
-possible bashism in parseTVfilename.sh line 192 (alternative test command ([[ foo ]] should be [ foo ])):
-					if [[ -f $tempSubNoExt".vtt" ]]; then
 possible bashism in parseTVfilename.sh line 194 (should be 'b = a'):
 						if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 199 (should be VAR="${VAR}foo"):
 						subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
-possible bashism in parseTVfilename.sh line 201 (alternative test command ([[ foo ]] should be [ foo ])):
-						if [[ -f $tempSub ]]; then
 possible bashism in parseTVfilename.sh line 204 (should be 'b = a'):
 							if [ $lang == $tempSubNoExt ]; then
 possible bashism in parseTVfilename.sh line 209 (should be VAR="${VAR}foo"):

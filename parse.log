@@ -82,26 +82,6 @@ In parseTVfilename.sh line 27:
                   ^-- SC2169: In dash, array references are not supported.
 
 
-In parseTVfilename.sh line 28:
-	if [ -s $dbNameTV ]; then
-                ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 29:
-		if grep -q "\"Show\": \"${myShow}\"" $dbNameTV; then
-                                                     ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
-In parseTVfilename.sh line 34:
-				if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
-                                   ^-- SC2169: In dash, [[ ]] is not supported.
-
-
-In parseTVfilename.sh line 35:
-					myID=$(jq -r "map((select(.Show == \"${myShow}\") | .ID)) | .[]" $dbNameTV)
-                                                                                                         ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In parseTVfilename.sh line 36:
 					myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
                                                                                 ^-- SC2027: The surrounding quotes actually unquote this. Remove or escape them.
@@ -124,21 +104,10 @@ In parseTVfilename.sh line 39:
                                                        ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
-In parseTVfilename.sh line 40:
-					if [[ "${myTitle}" == "null" ]]; then
-                                           ^-- SC2169: In dash, [[ ]] is not supported.
-
-
-In parseTVfilename.sh line 48:
-					tempPath=$(dirname $1)
-                                                           ^-- SC2086: Double quote to prevent globbing and word splitting.
-
-
 In parseTVfilename.sh line 50:
-					sub=($(find $tempPath -name $subName"*.srt"))
+					sub=($(find "$tempPath" -name "$subName"*".srt"))
                                             ^-- SC2169: In dash, arrays are not supported.
-                                                    ^-- SC2086: Double quote to prevent globbing and word splitting.
-                                                                    ^-- SC2086: Double quote to prevent globbing and word splitting.
+                                                                      ^-- SC2061: Quote the parameter to -name so the shell won't interpret it.
 
 
 In parseTVfilename.sh line 55:
@@ -146,19 +115,9 @@ In parseTVfilename.sh line 55:
                                                         ^-- SC2169: In dash, array references are not supported.
 
 
-In parseTVfilename.sh line 57:
-							subStr+=","
-                                                        ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 60:
-						if [[ -f $tempSubNoExt".vtt" ]]; then
-                                                   ^-- SC2169: In dash, [[ ]] is not supported.
-
-
-In parseTVfilename.sh line 62:
-							if [ $lang == $tempSubNoExt ]; then
-                                                                   ^-- SC2169: In dash, == in place of = is not supported.
+In parseTVfilename.sh line 56:
+						if $counter >= 1 ]; then
+                                                                 ^-- SC2171: Found trailing ] outside test. Missing [?
 
 
 In parseTVfilename.sh line 67:
@@ -166,36 +125,14 @@ In parseTVfilename.sh line 67:
                                                         ^-- SC2169: In dash, += is not supported.
 
 
-In parseTVfilename.sh line 69:
-							if [[ -f $tempSub ]]; then
-                                                           ^-- SC2169: In dash, [[ ]] is not supported.
-
-
-In parseTVfilename.sh line 70:
-								$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
-                                                                ^-- SC2091: Remove surrounding $() to avoid executing output.
-
-
 In parseTVfilename.sh line 72:
-								if [ $lang == $tempSubNoExt ]; then
-                                                                           ^-- SC2169: In dash, == in place of = is not supported.
+								if "$lang" = "$tempSubNoExt" ]; then
+                                                                                             ^-- SC2171: Found trailing ] outside test. Missing [?
 
 
 In parseTVfilename.sh line 77:
 								subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
                                                                 ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 80:
-						((counter++))
-                                                ^-- SC2169: In dash, standalone ((..)) is not supported.
-                                                         ^-- SC2169: In dash, ++ is not supported.
-
-
-In parseTVfilename.sh line 84:
-			jq -r "map((select(.Show == \"${myShow}\") | .Episodes) |= . + [{\"Season\":\"${mySeason}\",\"Episode\":\"${myEpisode}\",\"Title\":\"${myTitle}\",\"File\":\"${file}\",\"Subs\":[${subStr}]}])" $dbNameTV | sponge $dbNameTV;
-                                                                                                                                                                                                                        ^-- SC2086: Double quote to prevent globbing and word splitting.
-                                                                                                                                                                                                                                           ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
 In parseTVfilename.sh line 89:
@@ -204,13 +141,9 @@ In parseTVfilename.sh line 89:
 
 
 In parseTVfilename.sh line 93:
-				if [[ $myID =~ ^-?[0-9]+$ ]]; then #checks if ID is a number
-                                   ^-- SC2169: In dash, [[ ]] is not supported.
-
-
-In parseTVfilename.sh line 94:
-					if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
-                                           ^-- SC2169: In dash, [[ ]] is not supported.
+				if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
+                                     ^-- SC1066: Don't use $ on the left side of assignments.
+                                          ^-- SC1068: Don't put spaces around the = in assignments.
 
 
 In parseTVfilename.sh line 95:
@@ -235,11 +168,6 @@ In parseTVfilename.sh line 98:
                                                                ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
-In parseTVfilename.sh line 99:
-						if [[ "${myTitle}" == "null" ]]; then
-                                                   ^-- SC2169: In dash, [[ ]] is not supported.
-
-
 In parseTVfilename.sh line 112:
 					tempPath=$(dirname $1)
                                                            ^-- SC2086: Double quote to prevent globbing and word splitting.
@@ -262,11 +190,6 @@ In parseTVfilename.sh line 121:
                                                         ^-- SC2169: In dash, += is not supported.
 
 
-In parseTVfilename.sh line 124:
-						if [[ -f $tempSubNoExt".vtt" ]]; then
-                                                   ^-- SC2169: In dash, [[ ]] is not supported.
-
-
 In parseTVfilename.sh line 126:
 							if [ $lang == $tempSubNoExt ]; then
                                                                    ^-- SC2169: In dash, == in place of = is not supported.
@@ -275,11 +198,6 @@ In parseTVfilename.sh line 126:
 In parseTVfilename.sh line 131:
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
                                                         ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 133:
-							if [[ -f $tempSub ]]; then
-                                                           ^-- SC2169: In dash, [[ ]] is not supported.
 
 
 In parseTVfilename.sh line 134:
@@ -325,13 +243,9 @@ In parseTVfilename.sh line 157:
 
 
 In parseTVfilename.sh line 161:
-			if [[ $myID =~ ^-?[0-9]+$ ]]; then #checks if ID is a number
-                           ^-- SC2169: In dash, [[ ]] is not supported.
-
-
-In parseTVfilename.sh line 162:
-				if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
-                                   ^-- SC2169: In dash, [[ ]] is not supported.
+			if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
+                             ^-- SC1066: Don't use $ on the left side of assignments.
+                                  ^-- SC1068: Don't put spaces around the = in assignments.
 
 
 In parseTVfilename.sh line 163:
@@ -356,11 +270,6 @@ In parseTVfilename.sh line 166:
                                                        ^-- SC2086: Double quote to prevent globbing and word splitting.
 
 
-In parseTVfilename.sh line 167:
-					if [[ "${myTitle}" == "null" ]]; then
-                                           ^-- SC2169: In dash, [[ ]] is not supported.
-
-
 In parseTVfilename.sh line 180:
 				tempPath=$(dirname $1)
                                                    ^-- SC2086: Double quote to prevent globbing and word splitting.
@@ -383,11 +292,6 @@ In parseTVfilename.sh line 189:
                                                 ^-- SC2169: In dash, += is not supported.
 
 
-In parseTVfilename.sh line 192:
-					if [[ -f $tempSubNoExt".vtt" ]]; then
-                                           ^-- SC2169: In dash, [[ ]] is not supported.
-
-
 In parseTVfilename.sh line 194:
 						if [ $lang == $tempSubNoExt ]; then
                                                            ^-- SC2169: In dash, == in place of = is not supported.
@@ -396,11 +300,6 @@ In parseTVfilename.sh line 194:
 In parseTVfilename.sh line 199:
 						subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
                                                 ^-- SC2169: In dash, += is not supported.
-
-
-In parseTVfilename.sh line 201:
-						if [[ -f $tempSub ]]; then
-                                                   ^-- SC2169: In dash, [[ ]] is not supported.
 
 
 In parseTVfilename.sh line 202:

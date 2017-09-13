@@ -26,13 +26,13 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 	mySeason=${BASH_REMATCH[2]};
 	myEpisode=${BASH_REMATCH[3]};
 	if -s "$dbNameTV"; then
-		if grep -q "\"Show\": \"${myShow}\"" $dbNameTV; then
+		if grep -q "\"Show\": \"${myShow}\"" "$dbNameTV"; then
 			myTitle=""
 			sub=""
 			subStr='{"subFile":"", "lang":"en","label":"English"}'
 			if $fetchTVmetadata; then
 				if ! -z "$TMDBapi" && $getEpisodeName; then
-					myID=$(jq -r "map((select(.Show == \"${myShow}\") | .ID)) | .[]" $dbNameTV)
+					myID=$(jq -r "map((select(.Show == \"${myShow}\") | .ID)) | .[]" "$dbNameTV")
 					myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
 					myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
 					myTitle=$(echo ${myTitle} | sed "s/'//g")
@@ -53,35 +53,35 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 					fi
 					counter=0;
 					for tempSub in "${sub[@]}"; do
-						if  [ $counter -ge 1 ]; then
-							subStr+=","
+						if $counter >= 1 ]; then
+							subStr="$subStr,"
 						fi
 						tempSubNoExt="${tempSub%.*}"
-						if [[ -f $tempSubNoExt".vtt" ]]; then
+						if -f "$tempSubNoExt.vtt"; then
 							lang="${tempSubNoExt##*_}"
-							if [ $lang == $tempSubNoExt ]; then
+							if "$lang" = "$tempSubNoExt"; then
 								lang="en";
 							fi
-							tempSub=$tempSubNoExt".vtt"
+							tempSub="$tempSubNoExt.vtt"
 							tempSub=${tempSub#../}
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 						else
-							if [[ -f $tempSub ]]; then
-								$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
+							if -f "$tempSub"; then
+								ffmpeg -i "$tempSub" "$tempSubNoExt.vtt" 2> /dev/null
 								lang="${tempSubNoExt##*_}"
-								if [ $lang == $tempSubNoExt ]; then
+								if "$lang" = "$tempSubNoExt" ]; then
 									lang="en";
 								fi
-								tempSub=$tempSubNoExt".vtt"
+								tempSub="$tempSubNoExt.vtt"
 								tempSub=${tempSub#../}
 								subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 							fi
 						fi
-						((counter++))
+						$counter; _=$((counter=counter+1))
 					done
 				fi
 			fi
-			jq -r "map((select(.Show == \"${myShow}\") | .Episodes) |= . + [{\"Season\":\"${mySeason}\",\"Episode\":\"${myEpisode}\",\"Title\":\"${myTitle}\",\"File\":\"${file}\",\"Subs\":[${subStr}]}])" $dbNameTV | sponge $dbNameTV;
+			jq -r "map((select(.Show == \"${myShow}\") | .Episodes) |= . + [{\"Season\":\"${mySeason}\",\"Episode\":\"${myEpisode}\",\"Title\":\"${myTitle}\",\"File\":\"${file}\",\"Subs\":[${subStr}]}])" "$dbNameTV" | sponge "$dbNameTV";
 		else
 			myPoster="";
 			myID="";
@@ -90,13 +90,13 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 			subStr='{"subFile":"", "lang":"en","label":"English"}'
 			if $fetchTVmetadata; then
 				myID=$(./getTVid.sh "${myShow}");
-				if [[ $myID =~ ^-?[0-9]+$ ]]; then #checks if ID is a number
-					if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
+				if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
+					if  ! -z "$TMDBapi"  && $getEpisodeName; then
 						myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
 						myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
 						myTitle=$(echo ${myTitle} | sed "s/'//g")
 						myTitle=$(echo ${myTitle} | sed "s/\"//g")
-						if [[ "${myTitle}" == "null" ]]; then
+						if  "${myTitle}" == "null" ; then
 							myTitle=""
 						fi
 					fi
@@ -121,7 +121,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 							subStr+=","
 						fi
 						tempSubNoExt="${tempSub%.*}"
-						if [[ -f $tempSubNoExt".vtt" ]]; then
+						if  -f $tempSubNoExt".vtt" ; then
 							lang="${tempSubNoExt##*_}"
 							if [ $lang == $tempSubNoExt ]; then
 								lang="en";
@@ -130,7 +130,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 							tempSub=${tempSub#../}
 							subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 						else
-							if [[ -f $tempSub ]]; then
+							if  -f $tempSub ; then
 								$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
 								lang="${tempSubNoExt##*_}"
 								if [ $lang == $tempSubNoExt ]; then
@@ -158,13 +158,13 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 		subStr='"Subs":[{"subFile":"", "lang":"en","label":"English"}'
 		if $fetchTVmetadata; then
 			myID=$(./getTVid.sh "${myShow}");
-			if [[ $myID =~ ^-?[0-9]+$ ]]; then #checks if ID is a number
-				if [[ ! -z "$TMDBapi" ]] && $getEpisodeName; then
+			if  $myID =~ ^-?[0-9]+$ ; then #checks if ID is a number
+				if  ! -z "$TMDBapi"  && $getEpisodeName; then
 					myUrl="https://api.themoviedb.org/3/tv/"${myID}"/season/"${mySeason}"/episode/"${myEpisode}"?language=en&api_key="${TMDBapi}
 					myTitle=$(curl -s --request GET --url $myUrl --data '{}' | jq -r '.name')
 					myTitle=$(echo ${myTitle} | sed "s/'//g")
 					myTitle=$(echo ${myTitle} | sed "s/\"//g")
-					if [[ "${myTitle}" == "null" ]]; then
+					if  "${myTitle}" == "null" ; then
 						myTitle=""
 					fi
 				fi
@@ -189,7 +189,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 						subStr+=","
 					fi
 					tempSubNoExt="${tempSub%.*}"
-					if [[ -f $tempSubNoExt".vtt" ]]; then
+					if  -f $tempSubNoExt".vtt" ; then
 						lang="${tempSubNoExt##*_}"
 						if [ $lang == $tempSubNoExt ]; then
 							lang="en";
@@ -198,7 +198,7 @@ if [[ "${filename}" =~ ${regexTV1} ]] || [[ "${filename}" =~ ${regexTV2} ]] || [
 						tempSub=${tempSub#../}
 						subStr+='{"subFile":"'"${tempSub}"'", "lang":"'"${lang}"'","label":"'"${lang}"'"}'
 					else
-						if [[ -f $tempSub ]]; then
+						if  -f $tempSub ; then
 							$(ffmpeg -i $tempSub $tempSubNoExt".vtt" 2> /dev/null )
 							lang="${tempSubNoExt##*_}"
 							if [ $lang == $tempSubNoExt ]; then
